@@ -8,6 +8,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -28,13 +29,15 @@ public class RatingFragment extends Fragment implements OnClickListener {
 	private static final String SEARCH_REQ = "http://api.rottentomatoes.com/api/public/v1.0/movies.json?q=";
 	private static final String SIMILAR_REQ = "http://api.rottentomatoes.com/api/public/v1.0/movies/";
 
-	ArrayList<JSONObject> movieList;
-	JSONObject currentMovie;
+	MyDB db;
+
+	ArrayList<Movie> movieList;
+	Movie currentMovie;
 	TextView titleText;
 	ImageView posterImage;
 	EditText searchTerm;
 
-	String title, releaseDate = "";
+	String title, year = "";
 	Bitmap bitmap = null;
 
 	Random rand;
@@ -48,7 +51,24 @@ public class RatingFragment extends Fragment implements OnClickListener {
 			Bundle savedInstanceState) {
 		View rootView = inflater.inflate(R.layout.rating_fragment, container,
 				false);
-		movieList = new ArrayList<JSONObject>();
+		db = new MyDB(this.getActivity());
+		movieList = new ArrayList<Movie>();
+
+		Cursor mCursor = db.selectRecords("SimilarMovies");
+		for (int i = 0; i < mCursor.getCount(); i++) {
+			String[] movieData = new String[4];
+			for (int j = 0; j < mCursor.getColumnCount(); j++) {
+				movieData[j] = mCursor.getString(j);
+				//Log.i("db test", mCursor.getString(j));
+			}
+			movieList.add(new Movie(movieData[0], movieData[1], movieData[2], movieData[3]));
+			mCursor.moveToNext();
+		}
+		mCursor.close();
+
+		for(int i =0;i<movieList.size(); i++){
+			Log.i("movie list test", movieList.get(i).toString());
+		}
 		rand = new Random();
 
 		Button dontButton = (Button) rootView.findViewById(R.id.dontbutton);
@@ -59,15 +79,31 @@ public class RatingFragment extends Fragment implements OnClickListener {
 		searchButton.setOnClickListener(this);
 		searchTerm = (EditText) rootView.findViewById(R.id.editText1);
 
-		// findNewMovies();
-
 		titleText = (TextView) rootView.findViewById(R.id.movietitle);
-		titleText.setText(title + " (" + releaseDate + ")");
+		titleText.setText(title + " (" + year + ")");
 
 		posterImage = (ImageView) rootView.findViewById(R.id.image1);
 		posterImage.setImageBitmap(bitmap);
+		
+		if(movieList.size() != 0)
+			changeMovie();
 
 		return rootView;
+	}
+
+	@Override
+	public void onPause() {
+		super.onPause();
+		db.clearTable("SimilarMovies");
+		Log.i("TEST", "ON FRAGMENT PAUSE");
+		try {
+			for (int i = 0; i < movieList.size(); i++) {
+				Movie movie = movieList.get(i);
+				db.createRecords("SimilarMovies", movie.getId(),
+						movie.getTitle(), movie.getYear(), movie.getImageurl());
+			}
+		} catch (Exception e) {
+		}
 	}
 
 	void findMovie(String searchQuery) {
@@ -87,20 +123,18 @@ public class RatingFragment extends Fragment implements OnClickListener {
 		try {
 			JSONObject obj = new JSONObject(JSONString);
 			arr = obj.getJSONArray("movies");
+			obj = arr.getJSONObject(0);
+			currentMovie = getMovieFromJSON(obj);
 		} catch (JSONException e) {
 		}
 
-		try {
-			currentMovie = arr.getJSONObject(0);
-		} catch (JSONException e) {
-		}
 	}
 
 	void findNewMovies() {
 		String JSONString = "";
 		try {
 			WebRequest request = new WebRequest(SIMILAR_REQ
-					+ currentMovie.getString("id") + "/similar.json?" + API_KEY);
+					+ currentMovie.getId() + "/similar.json?" + API_KEY);
 			currentMovie = null;
 			JSONString = request.execute().get();
 		} catch (Exception e) {
@@ -116,7 +150,8 @@ public class RatingFragment extends Fragment implements OnClickListener {
 
 		try {
 			for (int i = 0; i < arr.length(); i++) {
-				movieList.add(arr.getJSONObject(i));
+				JSONObject j = arr.getJSONObject(i);
+				movieList.add(getMovieFromJSON(j));
 			}
 
 		} catch (JSONException e) {
@@ -125,35 +160,33 @@ public class RatingFragment extends Fragment implements OnClickListener {
 
 	void parseMovie() {
 
+		Movie movie;
+		if (currentMovie != null)
+			return;
+			//movie = currentMovie;
+		else
+			movie = movieList.get(0);
+		
+		currentMovie = movie;
+		title = movie.getTitle();
+		year = movie.getYear();
+		
+		String imageurl = movie.getImageurl();
+
+		ImageDownloader id = new ImageDownloader(imageurl);
 		try {
-			JSONObject obj;
-			if (currentMovie != null)
-				obj = currentMovie;
-			else
-				obj = movieList.remove(0);
-			currentMovie = obj;
-			title = obj.getString("title");
-			releaseDate = obj.getString("year");
+			bitmap = id.execute().get();
+		} catch (ExecutionException e) {
 
-			JSONObject posters = obj.getJSONObject("posters");
-			String imageurl = posters.getString("detailed");
+		} catch (InterruptedException e) {
 
-			ImageDownloader id = new ImageDownloader(imageurl);
-			try {
-				bitmap = id.execute().get();
-			} catch (ExecutionException e) {
-
-			} catch (InterruptedException e) {
-
-			}
-		} catch (JSONException e) {
 		}
 
 	}
 
 	void changeMovie() {
 		parseMovie();
-		titleText.setText(title + " (" + releaseDate + ")");
+		titleText.setText(title + " (" + year + ")");
 		posterImage.setImageBitmap(bitmap);
 	}
 
@@ -161,16 +194,24 @@ public class RatingFragment extends Fragment implements OnClickListener {
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.dontbutton:
+			movieList.remove(0);
 			changeMovie();
 			break;
 		case R.id.likebutton:
+			movieList.remove(0);
+			try {
+				db.createRecords("LikedMovies", currentMovie.getId(),
+						currentMovie.getTitle(), currentMovie.getYear(), currentMovie.getImageurl());
+			} catch (Exception e) {
+			}
 			findNewMovies();
 			changeMovie();
-			for(int i=0;i< movieList.size(); i++){
-				try{
-				String title = movieList.get(i).getString("title");
-				Log.i("list", title);
-				}catch(Exception e){}
+			for (int i = 0; i < movieList.size(); i++) {
+				try {
+					String title = movieList.get(i).getTitle();
+					Log.i("list", title);
+				} catch (Exception e) {
+				}
 			}
 			break;
 		case R.id.searchbutton:
@@ -181,5 +222,18 @@ public class RatingFragment extends Fragment implements OnClickListener {
 			break;
 		}
 
+	}
+
+	Movie getMovieFromJSON(JSONObject obj) {
+		Movie movie = new Movie(null, null, null, null);
+		try {
+			JSONObject posters = obj.getJSONObject("posters");
+			String imageurl = posters.getString("detailed");
+			movie = new Movie(obj.getString("id"), obj.getString("title"), obj.getString("year"),
+					imageurl);
+		} catch (JSONException e) {
+		}
+
+		return movie;
 	}
 }
