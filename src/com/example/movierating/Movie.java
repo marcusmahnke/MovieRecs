@@ -4,6 +4,14 @@ public class Movie {
 	String id, title, year, imageurl;
 	
 	Movie(String id, String title, String year, String imageurl){
+		initMovie(id, title, year, imageurl);
+	}
+	
+	Movie(){
+		initMovie("","","","");
+	}
+	
+	void initMovie(String id, String title, String year, String imageurl){
 		this.id = id;
 		this.title = title;
 		this.year = year;
@@ -11,7 +19,7 @@ public class Movie {
 	}
 	
 	public String toString(){
-		return id+": " + title + " (" + year +")";
+		return id + ": " + title + " (" + year + ")";
 	}
 
 	public String getYear() {
