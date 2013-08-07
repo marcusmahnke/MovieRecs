@@ -1,13 +1,14 @@
 package com.example.movierating;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Random;
-import java.util.concurrent.ExecutionException;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.Activity;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -20,6 +21,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -32,14 +34,14 @@ public class RatingFragment extends Fragment implements OnClickListener {
 
 	MyDB db;
 
-	ArrayList<Movie> movieList;
+	ArrayList<Movie> similarMovieList, seenMovieList;
 	Movie currentMovie;
 	TextView titleText;
 	ImageView posterImage;
 	EditText searchTerm;
 
 	Random rand;
-
+	
 	public RatingFragment() {
 
 	}
@@ -50,28 +52,32 @@ public class RatingFragment extends Fragment implements OnClickListener {
 		View rootView = inflater.inflate(R.layout.rating_fragment, container,
 				false);
 		db = new MyDB(this.getActivity());
-		movieList = new ArrayList<Movie>();
+		similarMovieList = new ArrayList<Movie>();
+		seenMovieList = new ArrayList<Movie>();
 		loadSimilarMovies();
+		loadSeenMovies();
 		rand = new Random();
 		
 		//For testing only
-		for(int i =0;i<movieList.size(); i++){
-			Log.i("movie list test", movieList.get(i).toString());
+		for(int i =0;i<similarMovieList.size(); i++){
+			Log.i("movie list test", similarMovieList.get(i).toString());
 		}
 		
 		// Layout stuff
-		Button dontButton = (Button) rootView.findViewById(R.id.dontbutton);
+		ImageButton dontButton = (ImageButton) rootView.findViewById(R.id.dontbutton);
 		dontButton.setOnClickListener(this);
-		Button likeButton = (Button) rootView.findViewById(R.id.likebutton);
+		ImageButton likeButton = (ImageButton) rootView.findViewById(R.id.likebutton);
 		likeButton.setOnClickListener(this);
-		Button searchButton = (Button) rootView.findViewById(R.id.searchbutton);
+		Button notseenButton = (Button) rootView.findViewById(R.id.notseenbutton);
+		notseenButton.setOnClickListener(this);
+		ImageButton searchButton = (ImageButton) rootView.findViewById(R.id.searchbutton);
 		searchButton.setOnClickListener(this);
 		searchTerm = (EditText) rootView.findViewById(R.id.editText1);
 
 		titleText = (TextView) rootView.findViewById(R.id.movietitle);
 		posterImage = (ImageView) rootView.findViewById(R.id.image1);
 		
-		if(movieList.size() != 0)
+		if(similarMovieList.size() != 0)
 			changeMovie();
 
 		return rootView;
@@ -80,7 +86,6 @@ public class RatingFragment extends Fragment implements OnClickListener {
 	@Override
 	public void onPause() {
 		super.onPause();
-		saveSimilarMovies();
 		
 		Log.i("TEST", "ON FRAGMENT PAUSE");
 	}
@@ -89,14 +94,33 @@ public class RatingFragment extends Fragment implements OnClickListener {
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.dontbutton:
-			movieList.remove(0);
+			similarMovieList.remove(0);
+			db.updateMovieRecord(currentMovie.getId(), 0, 1, 0);
+			seenMovieList.add(currentMovie);
 			changeMovie();
 			break;
 		case R.id.likebutton:
-			movieList.remove(0);
-			db.createRecords("LikedMovies", currentMovie.getId(),
-					currentMovie.getTitle(), currentMovie.getYear(), currentMovie.getImageurl());
+			similarMovieList.remove(0);
+			db.updateMovieRecord(currentMovie.getId(), 0, 1, 1);
+			seenMovieList.add(currentMovie);
+			//db.createRecords("SeenMovies", currentMovie.getId(),
+					//currentMovie.getTitle(), currentMovie.getYear(), currentMovie.getImageurl(), currentMovie.getThumburl(),
+					//currentMovie.getSynopsis(), currentMovie.getCriticScore(), currentMovie.getAudienceScore());
 			findSimilarMovies();
+			changeMovie();
+			break;
+		case R.id.notseenbutton:
+			similarMovieList.remove(0);
+			
+			Bitmap image = loadImage(currentMovie.thumburl);
+			ByteArrayOutputStream stream = new ByteArrayOutputStream();
+			image.compress(Bitmap.CompressFormat.PNG, 100, stream);
+			byte[] byteArray = stream.toByteArray();
+			
+			db.updateMovieRecord(currentMovie.getId(), 0, 0, 0, byteArray);
+			
+			//db.createUnseenRecord(currentMovie.getId(), currentMovie.getTitle(), currentMovie.getYear(), byteArray,
+					//currentMovie.getSynopsis(), currentMovie.getCriticScore(), currentMovie.getAudienceScore());
 			changeMovie();
 			break;
 		case R.id.searchbutton:
@@ -110,7 +134,7 @@ public class RatingFragment extends Fragment implements OnClickListener {
 	}
 	
 	void changeMovie() {
-		currentMovie = movieList.get(0);
+		currentMovie = similarMovieList.get(0);
 		Bitmap image = loadImage(currentMovie.getImageurl());
 		titleText.setText(currentMovie.getTitle() + " (" + currentMovie.getYear() + ")");
 		posterImage.setImageBitmap(image);
@@ -134,6 +158,7 @@ public class RatingFragment extends Fragment implements OnClickListener {
 			currentMovie = getMovieFromJSON(obj);
 		} catch (JSONException e) {
 		}
+			similarMovieList.add(currentMovie);
 
 	}
 
@@ -154,34 +179,41 @@ public class RatingFragment extends Fragment implements OnClickListener {
 
 			for (int i = 0; i < arr.length(); i++) {
 				JSONObject j = arr.getJSONObject(i);
-				movieList.add(getMovieFromJSON(j));
+				Movie movie = getMovieFromJSON(j);
+				if(!similarMovieList.contains(movie) && !seenMovieList.contains(movie)){
+					similarMovieList.add(movie);
+					
+					db.createMovieRecord(movie.getId(), movie.getTitle(), movie.getYear(), null, 
+							movie.getImageurl(), movie.getThumburl(), movie.getSynopsis(), 
+							movie.getCriticScore(), movie.getAudienceScore(), 1, 0, 0);
+				}
+				
+				
 			}
-
 		} catch (JSONException e) {
 		}
 	}
 
 	void loadSimilarMovies(){
-		Cursor mCursor = db.selectRecords("SimilarMovies");
+		//Cursor mCursor = db.selectRecords("SimilarMovies");
+		Cursor mCursor = db.selectMovieRecords(true, false, null);
 		for (int i = 0; i < mCursor.getCount(); i++) {
-			String[] movieData = new String[4];
-			for (int j = 0; j < mCursor.getColumnCount(); j++) {
-				movieData[j] = mCursor.getString(j);
-			}
-			movieList.add(new Movie(movieData[0], movieData[1], movieData[2], movieData[3]));
+			similarMovieList.add(new Movie(mCursor.getString(0), mCursor.getString(1), mCursor.getString(2), 
+					mCursor.getString(4), mCursor.getString(5), mCursor.getString(6), mCursor.getInt(7), mCursor.getInt(8)));
 			mCursor.moveToNext();
 		}
 		mCursor.close();
 	}
 	
-	void saveSimilarMovies(){
-		db.clearTable("SimilarMovies");
-		
-		for (int i = 0; i < movieList.size(); i++) {
-			Movie movie = movieList.get(i);
-			db.createRecords("SimilarMovies", movie.getId(),
-					movie.getTitle(), movie.getYear(), movie.getImageurl());
+	void loadSeenMovies(){
+		//Cursor mCursor = db.selectRecords("SeenMovies");
+		Cursor mCursor = db.selectMovieRecords(false, true, null);
+		for (int i = 0; i < mCursor.getCount(); i++) {
+			seenMovieList.add(new Movie(mCursor.getString(0), mCursor.getString(1), mCursor.getString(2), 
+					mCursor.getString(4), mCursor.getString(5), mCursor.getString(6), mCursor.getInt(7), mCursor.getInt(8)));
+			mCursor.moveToNext();
 		}
+		mCursor.close();
 	}
 	
 	Movie getMovieFromJSON(JSONObject obj) {
@@ -189,7 +221,13 @@ public class RatingFragment extends Fragment implements OnClickListener {
 		try {
 			JSONObject posters = obj.getJSONObject("posters");
 			String imageurl = posters.getString("detailed");
-			movie.initMovie(obj.getString("id"), obj.getString("title"), obj.getString("year"), imageurl);
+			String thumburl = posters.getString("thumbnail");
+			JSONObject ratings = obj.getJSONObject("ratings");
+			int criticScore = ratings.getInt("critics_score");
+			int audienceScore = ratings.getInt("audience_score");
+			
+			movie.initMovie(obj.getString("id"), obj.getString("title"), obj.getString("year"), imageurl, thumburl,
+					obj.getString("synopsis"), criticScore, audienceScore);
 		} catch (JSONException e) {
 		}
 

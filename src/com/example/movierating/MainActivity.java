@@ -1,6 +1,7 @@
 package com.example.movierating;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Locale;
 import java.util.concurrent.ExecutionException;
 
@@ -49,6 +50,9 @@ public class MainActivity extends FragmentActivity implements
 	 * The {@link ViewPager} that will host the section contents.
 	 */
 	ViewPager mViewPager;
+	UnseenMoviesListFragment unseenListFragment;
+	SeenMoviesListFragment seenListFragment;
+	ArrayList<Movie> similarMovieList;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +80,9 @@ public class MainActivity extends FragmentActivity implements
 					@Override
 					public void onPageSelected(int position) {
 						actionBar.setSelectedNavigationItem(position);
+						if(position == 1 && unseenListFragment != null){
+							unseenListFragment.onResume();
+						}
 					}
 				});
 
@@ -134,6 +141,14 @@ public class MainActivity extends FragmentActivity implements
 			if(position == 0){
 				Fragment fragment = new RatingFragment();
 				return fragment;
+			}
+			else if(position==1){
+				unseenListFragment = new UnseenMoviesListFragment();
+				return unseenListFragment;
+			}
+			else if(position==2){
+				seenListFragment = new SeenMoviesListFragment();
+				return seenListFragment;
 			}
 			else{
 			Fragment fragment = new DummySectionFragment();
@@ -196,5 +211,4 @@ public class MainActivity extends FragmentActivity implements
 		}
 		
 	}
-
 }
