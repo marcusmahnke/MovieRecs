@@ -31,18 +31,33 @@
 
     <ImageView
         android:id="@+id/tomato"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingRight="5dp" 
-        android:layout_alignParentRight="true"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
         android:layout_toLeftOf="@+id/criticscore"
-        android:src="@drawable/action_search"/>
+        android:paddingRight="5dp" />
+
+    <ImageView
+        android:id="@+id/popcorn"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_below="@+id/tomato"
+        android:layout_toLeftOf="@+id/audiencescore"
+        android:paddingRight="5dp" />
 
     <TextView
         android:id="@+id/criticscore"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
+        android:paddingBottom="5dp"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/audiencescore"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/criticscore"
         android:textSize="16sp" />
 
 </RelativeLayout>

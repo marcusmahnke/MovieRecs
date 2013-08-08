@@ -37,7 +37,7 @@ public class RatingFragment extends Fragment implements OnClickListener {
 	ArrayList<Movie> similarMovieList, seenMovieList;
 	Movie currentMovie;
 	TextView titleText;
-	ImageView posterImage;
+	ImageView posterView;
 	EditText searchTerm;
 
 	Random rand;
@@ -68,15 +68,19 @@ public class RatingFragment extends Fragment implements OnClickListener {
 		dontButton.setOnClickListener(this);
 		ImageButton likeButton = (ImageButton) rootView.findViewById(R.id.likebutton);
 		likeButton.setOnClickListener(this);
-		Button notseenButton = (Button) rootView.findViewById(R.id.notseenbutton);
+		ImageButton notseenButton = (ImageButton) rootView.findViewById(R.id.notseenbutton);
 		notseenButton.setOnClickListener(this);
 		ImageButton searchButton = (ImageButton) rootView.findViewById(R.id.searchbutton);
 		searchButton.setOnClickListener(this);
 		searchTerm = (EditText) rootView.findViewById(R.id.editText1);
 
 		titleText = (TextView) rootView.findViewById(R.id.movietitle);
-		posterImage = (ImageView) rootView.findViewById(R.id.image1);
-		
+		posterView = (ImageView) rootView.findViewById(R.id.image1);
+		posterView.getLayoutParams().width = 173;
+		posterView.getLayoutParams().height = 256;
+		//posterImage.setAdjustViewBounds(true);
+		//posterImage.setMaxWidth(173);
+		//posterImage.setMaxHeight(256);
 		if(similarMovieList.size() != 0)
 			changeMovie();
 
@@ -137,7 +141,7 @@ public class RatingFragment extends Fragment implements OnClickListener {
 		currentMovie = similarMovieList.get(0);
 		Bitmap image = loadImage(currentMovie.getImageurl());
 		titleText.setText(currentMovie.getTitle() + " (" + currentMovie.getYear() + ")");
-		posterImage.setImageBitmap(image);
+		posterView.setImageBitmap(image);
 	}
 	
 	void findMovie(String searchQuery) {
