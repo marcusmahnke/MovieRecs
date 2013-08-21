@@ -107,9 +107,6 @@ public class RatingFragment extends Fragment implements OnClickListener {
 			similarMovieList.remove(0);
 			db.updateMovieRecord(currentMovie.getId(), 0, 1, 1);
 			seenMovieList.add(currentMovie);
-			//db.createRecords("SeenMovies", currentMovie.getId(),
-					//currentMovie.getTitle(), currentMovie.getYear(), currentMovie.getImageurl(), currentMovie.getThumburl(),
-					//currentMovie.getSynopsis(), currentMovie.getCriticScore(), currentMovie.getAudienceScore());
 			findSimilarMovies();
 			changeMovie();
 			break;
@@ -122,9 +119,6 @@ public class RatingFragment extends Fragment implements OnClickListener {
 			byte[] byteArray = stream.toByteArray();
 			
 			db.updateMovieRecord(currentMovie.getId(), 0, 0, 0, byteArray);
-			
-			//db.createUnseenRecord(currentMovie.getId(), currentMovie.getTitle(), currentMovie.getYear(), byteArray,
-					//currentMovie.getSynopsis(), currentMovie.getCriticScore(), currentMovie.getAudienceScore());
 			changeMovie();
 			break;
 		case R.id.searchbutton:
@@ -199,7 +193,6 @@ public class RatingFragment extends Fragment implements OnClickListener {
 	}
 
 	void loadSimilarMovies(){
-		//Cursor mCursor = db.selectRecords("SimilarMovies");
 		Cursor mCursor = db.selectMovieRecords(true, false, null);
 		for (int i = 0; i < mCursor.getCount(); i++) {
 			similarMovieList.add(new Movie(mCursor.getString(0), mCursor.getString(1), mCursor.getString(2), 
@@ -210,7 +203,6 @@ public class RatingFragment extends Fragment implements OnClickListener {
 	}
 	
 	void loadSeenMovies(){
-		//Cursor mCursor = db.selectRecords("SeenMovies");
 		Cursor mCursor = db.selectMovieRecords(false, true, null);
 		for (int i = 0; i < mCursor.getCount(); i++) {
 			seenMovieList.add(new Movie(mCursor.getString(0), mCursor.getString(1), mCursor.getString(2), 

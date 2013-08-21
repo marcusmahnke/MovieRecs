@@ -31,6 +31,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.TextView;
 
 public class MainActivity extends FragmentActivity implements
@@ -59,6 +60,9 @@ public class MainActivity extends FragmentActivity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
+		// Stop auto keyboard pop-up
+		this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+		
 		// Set up the action bar.
 		final ActionBar actionBar = getActionBar();
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
@@ -83,6 +87,9 @@ public class MainActivity extends FragmentActivity implements
 						if(position == 1 && unseenListFragment != null){
 							unseenListFragment.onResume();
 						}
+						if(position == 2 && seenListFragment!=null){
+							seenListFragment.onResume();
+						}
 					}
 				});
 
@@ -101,7 +108,10 @@ public class MainActivity extends FragmentActivity implements
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
+		//int position = this.getActionBar().getSelectedTab().getPosition();
+		
 		getMenuInflater().inflate(R.menu.main, menu);
+		
 		return true;
 	}
 
@@ -110,6 +120,7 @@ public class MainActivity extends FragmentActivity implements
 			FragmentTransaction fragmentTransaction) {
 		// When the given tab is selected, switch to the corresponding page in
 		// the ViewPager.
+		
 		mViewPager.setCurrentItem(tab.getPosition());
 	}
 

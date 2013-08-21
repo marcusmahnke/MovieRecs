@@ -4,6 +4,49 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" 
+        android:padding="5dp">
+
+        <TextView
+            android:id="@+id/sortlabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sorted by:" 
+            android:textStyle="bold"
+            android:layout_marginRight="10dp"/>
+
+        <ImageView
+            android:id="@+id/alphabeticalsort"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginRight="10dp"
+            android:src="@drawable/alphabetical_selected" />
+        
+        <ImageView
+            android:id="@+id/datesort"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginRight="10dp"
+            android:src="@drawable/datesort" />
+
+        <ImageView
+            android:id="@+id/tomatosort"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginRight="10dp"
+            android:src="@drawable/tomato" />
+
+        <ImageView
+            android:id="@+id/popcornsort"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginRight="0dp"
+            android:src="@drawable/redpop" />
+    </LinearLayout>
+
     <ListView
         android:id="@android:id/list"
         android:layout_width="match_parent"

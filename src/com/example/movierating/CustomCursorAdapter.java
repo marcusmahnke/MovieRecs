@@ -15,13 +15,13 @@ import android.widget.TextView;
 
 public class CustomCursorAdapter extends CursorAdapter{
 	LayoutInflater inflater;
-	boolean withImages;
+	boolean isUnseen;
 	
-	public CustomCursorAdapter(Context context, Cursor c, int flags, boolean withImages) {
+	public CustomCursorAdapter(Context context, Cursor c, int flags, boolean isUnseen) {
 		super(context, c, flags);
 		inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		
-		this.withImages = withImages;
+		this.isUnseen = isUnseen;
 	}
 
 	@Override
@@ -40,9 +40,9 @@ public class CustomCursorAdapter extends CursorAdapter{
 		posterView.setMaxHeight(91);
 		String title = c.getString(1);
 		String year = c.getString(2);
+		int liked = c.getInt(9);
 		
-		
-		if(withImages){
+		if(isUnseen){
 			int criticScore = c.getInt(7);
 			int audienceScore = c.getInt(8);
 			byte[] byteArray = c.getBlob(3);
@@ -61,6 +61,12 @@ public class CustomCursorAdapter extends CursorAdapter{
 			audienceScoreView.setText(Integer.toString(audienceScore) + "%");
 			Bitmap image = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
 			posterView.setImageBitmap(image);
+		}
+		else{
+			if(liked == 1)
+				posterView.setImageResource(R.drawable.thumbup);
+			else
+				posterView.setImageResource(R.drawable.thumbdown);
 		}
 		
 		titleView.setText(title);

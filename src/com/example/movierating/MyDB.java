@@ -45,7 +45,8 @@ public class MyDB {
 			selection = "seen = 0 and similar = 0";
 		
 		String[] cols = new String[] {MOVIE_ID, MOVIE_TITLE, "year", "image", "imageurl", "thumburl",
-				"synopsis", "critic_score", "aud_score"};
+				"synopsis", "critic_score", "aud_score", "liked"};
+
 		Cursor mCursor = db.query(true, "Movies", cols, selection, null, null, null, orderBy, null);
 		if (mCursor != null){
 			mCursor.moveToFirst();

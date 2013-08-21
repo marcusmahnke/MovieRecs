@@ -22,44 +22,69 @@ public final class R {
     }
     public static final class drawable {
         public static final int action_search=0x7f020000;
-        public static final int greenpop=0x7f020001;
-        public static final int ic_launcher=0x7f020002;
-        public static final int launcher=0x7f020003;
-        public static final int notseen=0x7f020004;
-        public static final int rating_bad=0x7f020005;
-        public static final int rating_good=0x7f020006;
-        public static final int redpop=0x7f020007;
-        public static final int rotten=0x7f020008;
-        public static final int tomato=0x7f020009;
+        public static final int alphabetical=0x7f020001;
+        public static final int alphabetical_selected=0x7f020002;
+        public static final int datesort=0x7f020003;
+        public static final int datesort_selected=0x7f020004;
+        public static final int greenpop=0x7f020005;
+        public static final int greenpop_small=0x7f020006;
+        public static final int ic_launcher=0x7f020007;
+        public static final int launcher=0x7f020008;
+        public static final int notseen=0x7f020009;
+        public static final int rating_bad=0x7f02000a;
+        public static final int rating_good=0x7f02000b;
+        public static final int redpop=0x7f02000c;
+        public static final int redpop_selected=0x7f02000d;
+        public static final int redpop_small=0x7f02000e;
+        public static final int rotten=0x7f02000f;
+        public static final int rotten_small=0x7f020010;
+        public static final int thumbdown=0x7f020011;
+        public static final int thumbdown_selected=0x7f020012;
+        public static final int thumbup=0x7f020013;
+        public static final int thumbup_selected=0x7f020014;
+        public static final int tomato=0x7f020015;
+        public static final int tomato_selected=0x7f020016;
+        public static final int tomato_small=0x7f020017;
     }
     public static final class id {
-        public static final int action_settings=0x7f080010;
-        public static final int audiencescore=0x7f080008;
-        public static final int criticscore=0x7f080006;
-        public static final int dontbutton=0x7f08000d;
-        public static final int editText1=0x7f080009;
-        public static final int image1=0x7f08000c;
-        public static final int likebutton=0x7f08000e;
-        public static final int movietitle=0x7f08000b;
-        public static final int notseenbutton=0x7f08000f;
+        public static final int action_settings=0x7f080017;
+        public static final int alphabeticalsort=0x7f080003;
+        public static final int audiencescore=0x7f08000d;
+        public static final int criticscore=0x7f08000b;
+        public static final int datesort=0x7f080004;
+        public static final int dontbutton=0x7f080010;
+        public static final int editText1=0x7f080013;
+        public static final int image1=0x7f08000e;
+        public static final int likebutton=0x7f08000f;
+        public static final int movietitle=0x7f080015;
+        public static final int notseenbutton=0x7f080016;
         public static final int pager=0x7f080000;
-        public static final int popcorn=0x7f080007;
-        public static final int poster=0x7f080002;
-        public static final int searchbutton=0x7f08000a;
+        public static final int popcorn=0x7f08000c;
+        public static final int popcornsort=0x7f080006;
+        public static final int poster=0x7f080007;
+        public static final int searchbutton=0x7f080014;
         public static final int section_label=0x7f080001;
-        public static final int title=0x7f080003;
-        public static final int tomato=0x7f080005;
-        public static final int year=0x7f080004;
+        public static final int sort_audience_desc=0x7f080019;
+        public static final int sort_critic_desc=0x7f080018;
+        public static final int sortlabel=0x7f080002;
+        public static final int synopsis=0x7f080012;
+        public static final int synopsislabel=0x7f080011;
+        public static final int title=0x7f080008;
+        public static final int tomato=0x7f08000a;
+        public static final int tomatosort=0x7f080005;
+        public static final int year=0x7f080009;
     }
     public static final class layout {
         public static final int activity_main=0x7f030000;
         public static final int fragment_main_dummy=0x7f030001;
         public static final int list_fragment=0x7f030002;
         public static final int list_item=0x7f030003;
-        public static final int rating_fragment=0x7f030004;
+        public static final int movie_activity=0x7f030004;
+        public static final int rating_fragment=0x7f030005;
     }
     public static final class menu {
         public static final int main=0x7f070000;
+        public static final int unseen_list_menu=0x7f070001;
     }
     public static final class string {
         public static final int action_settings=0x7f050001;
