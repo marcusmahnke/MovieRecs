@@ -102,9 +102,6 @@ public class UnseenMoviesListFragment extends ListFragment implements OnClickLis
     public void onListItemClick(ListView l, View v, int position, long id) {
         Cursor mCursor = adapter.getCursor();
         mCursor.moveToPosition(position);
-        Movie m = new Movie(mCursor.getString(0), mCursor.getString(1), mCursor.getString(2), 
-        		mCursor.getString(4), mCursor.getString(5), mCursor.getString(6),
-        		mCursor.getInt(7), mCursor.getInt(8));
         
         Intent myIntent = new Intent(getActivity(), MovieActivity.class);
         myIntent.putExtra("id", mCursor.getString(0));
@@ -115,6 +112,7 @@ public class UnseenMoviesListFragment extends ListFragment implements OnClickLis
         myIntent.putExtra("synopsis", mCursor.getString(6));
         myIntent.putExtra("critic_score", mCursor.getInt(7));
         myIntent.putExtra("aud_score", mCursor.getInt(8));
+        myIntent.putExtra("seen", 0);
 		getActivity().startActivity(myIntent);
     }
 

@@ -32,19 +32,21 @@ public final class R {
         public static final int launcher=0x7f020008;
         public static final int notseen=0x7f020009;
         public static final int rating_bad=0x7f02000a;
-        public static final int rating_good=0x7f02000b;
-        public static final int redpop=0x7f02000c;
-        public static final int redpop_selected=0x7f02000d;
-        public static final int redpop_small=0x7f02000e;
-        public static final int rotten=0x7f02000f;
-        public static final int rotten_small=0x7f020010;
-        public static final int thumbdown=0x7f020011;
-        public static final int thumbdown_selected=0x7f020012;
-        public static final int thumbup=0x7f020013;
-        public static final int thumbup_selected=0x7f020014;
-        public static final int tomato=0x7f020015;
-        public static final int tomato_selected=0x7f020016;
-        public static final int tomato_small=0x7f020017;
+        public static final int rating_bad_selected=0x7f02000b;
+        public static final int rating_good=0x7f02000c;
+        public static final int rating_good_selected=0x7f02000d;
+        public static final int redpop=0x7f02000e;
+        public static final int redpop_selected=0x7f02000f;
+        public static final int redpop_small=0x7f020010;
+        public static final int rotten=0x7f020011;
+        public static final int rotten_small=0x7f020012;
+        public static final int thumbdown=0x7f020013;
+        public static final int thumbdown_selected=0x7f020014;
+        public static final int thumbup=0x7f020015;
+        public static final int thumbup_selected=0x7f020016;
+        public static final int tomato=0x7f020017;
+        public static final int tomato_selected=0x7f020018;
+        public static final int tomato_small=0x7f020019;
     }
     public static final class id {
         public static final int action_settings=0x7f080017;

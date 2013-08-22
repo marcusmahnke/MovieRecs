@@ -14,6 +14,7 @@ import android.widget.TextView;
 public class MovieActivity extends Activity implements OnClickListener{
 	Movie movie;
 	MyDB db;
+	int liked, seen;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -27,6 +28,8 @@ public class MovieActivity extends Activity implements OnClickListener{
 				extras.getString("year"), extras.getString("imageurl"),
 				extras.getString("thumburl"), extras.getString("synopsis"),
 				extras.getInt("critic_score"), extras.getInt("aud_score"));
+		liked = extras.getInt("liked");
+		seen = extras.getInt("seen");
 		
 		TextView titleView = (TextView) this.findViewById(R.id.title);
 		TextView synopsisView = (TextView) this.findViewById(R.id.synopsis);
@@ -37,6 +40,13 @@ public class MovieActivity extends Activity implements OnClickListener{
 		dontButton.setOnClickListener(this);
 		ImageButton likeButton = (ImageButton) this.findViewById(R.id.likebutton);
 		likeButton.setOnClickListener(this);
+		
+		if(seen==1){
+			if(liked==1)
+				likeButton.setImageResource(R.drawable.rating_good_selected);
+			else
+				dontButton.setImageResource(R.drawable.rating_bad_selected);
+		}
 		
 		Drawable criticImage, audienceImage;
 		if(movie.getCriticScore() >= 60)

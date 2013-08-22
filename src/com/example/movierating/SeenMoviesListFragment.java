@@ -1,5 +1,6 @@
 package com.example.movierating;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
@@ -9,6 +10,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ListView;
 
 public class SeenMoviesListFragment extends ListFragment implements OnClickListener{
 	MyDB db;
@@ -99,5 +101,24 @@ public class SeenMoviesListFragment extends ListFragment implements OnClickListe
 		adapter.changeCursor(mCursor);
 		adapter.notifyDataSetChanged();
 	}
+	
+	@Override 
+    public void onListItemClick(ListView l, View v, int position, long id) {
+        Cursor mCursor = adapter.getCursor();
+        mCursor.moveToPosition(position);
+        
+        Intent myIntent = new Intent(getActivity(), MovieActivity.class);
+        myIntent.putExtra("id", mCursor.getString(0));
+        myIntent.putExtra("title", mCursor.getString(1));
+        myIntent.putExtra("year", mCursor.getString(2));
+        myIntent.putExtra("imageurl", mCursor.getString(4));
+        myIntent.putExtra("thumburl", mCursor.getString(5));
+        myIntent.putExtra("synopsis", mCursor.getString(6));
+        myIntent.putExtra("critic_score", mCursor.getInt(7));
+        myIntent.putExtra("aud_score", mCursor.getInt(8));
+        myIntent.putExtra("liked", mCursor.getInt(9));
+        myIntent.putExtra("seen", 1);
+		getActivity().startActivity(myIntent);
+    }
 
 }
