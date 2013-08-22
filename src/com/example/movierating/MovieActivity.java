@@ -5,17 +5,23 @@ import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class MovieActivity extends Activity {
+public class MovieActivity extends Activity implements OnClickListener{
 	Movie movie;
+	MyDB db;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.movie_activity);
 
+		db = new MyDB(this);
+		
 		Bundle extras = getIntent().getExtras();
 		movie = new Movie(extras.getString("id"), extras.getString("title"),
 				extras.getString("year"), extras.getString("imageurl"),
@@ -27,8 +33,10 @@ public class MovieActivity extends Activity {
 		TextView criticScore = (TextView) this.findViewById(R.id.criticscore);
 		TextView audienceScore = (TextView) this.findViewById(R.id.audiencescore);
 		ImageView posterView = (ImageView) this.findViewById(R.id.image1);
-		//ImageView criticImage = (ImageView)	this.findViewById(R.id.tomato);
-		//ImageView audienceImage = (ImageView) this.findViewById(R.id.popcorn);
+		ImageButton dontButton = (ImageButton) this.findViewById(R.id.dontbutton);
+		dontButton.setOnClickListener(this);
+		ImageButton likeButton = (ImageButton) this.findViewById(R.id.likebutton);
+		likeButton.setOnClickListener(this);
 		
 		Drawable criticImage, audienceImage;
 		if(movie.getCriticScore() >= 60)
@@ -62,6 +70,21 @@ public class MovieActivity extends Activity {
 		}
 		
 		return image;
+	}
+
+	@Override
+	public void onClick(View v) {
+		switch(v.getId()){
+		case R.id.likebutton:
+			db.updateMovieRecord(movie.getId(), 0, 1, 1);
+			finish();
+			break;
+		case R.id.dontbutton:
+			db.updateMovieRecord(movie.getId(), 0, 1, 0);
+			finish();
+			break;
+		}
+		
 	}
 
 }
