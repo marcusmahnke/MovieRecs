@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
@@ -73,7 +74,11 @@ public class MovieActivity extends Activity implements OnClickListener{
 		audienceScore.setText(movie.getAudienceScore() + "%");
 		posterView.setImageBitmap(loadImage(movie.getImageurl()));
 		titleView.setText(movie.getTitle() + " (" + movie.getYear() + ")");
-		synopsisView.setText(movie.getSynopsis());
+		Log.i("synopsis test", "test:" + movie.getSynopsis());
+		if(movie.getSynopsis().trim().equals(""))
+			synopsisView.setText("Unavailable");
+		else
+			synopsisView.setText(movie.getSynopsis());
 	}
 	
 	Bitmap loadImage(String imageurl){
