@@ -40,12 +40,17 @@ public class MovieActivity extends Activity implements OnClickListener{
 		dontButton.setOnClickListener(this);
 		ImageButton likeButton = (ImageButton) this.findViewById(R.id.likebutton);
 		likeButton.setOnClickListener(this);
+		ImageButton notseenButton = (ImageButton) this.findViewById(R.id.notseenbutton);
+		notseenButton.setOnClickListener(this);
 		
 		if(seen==1){
 			if(liked==1)
 				likeButton.setImageResource(R.drawable.rating_good_selected);
 			else
 				dontButton.setImageResource(R.drawable.rating_bad_selected);
+		}
+		else{
+			notseenButton.setVisibility(View.GONE);
 		}
 		
 		Drawable criticImage, audienceImage;
@@ -93,8 +98,13 @@ public class MovieActivity extends Activity implements OnClickListener{
 			db.updateMovieRecord(movie.getId(), 0, 1, 0);
 			finish();
 			break;
+		case R.id.notseenbutton:
+			if(seen==1){
+				db.updateMovieRecord(movie.getId(), 0, 0, 0);
+				finish();
+			}
+			break;
 		}
-		
 	}
 
 }

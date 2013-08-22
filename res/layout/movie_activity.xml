@@ -15,15 +15,15 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:layout_marginTop="10dp"
-        android:orientation="horizontal"
-        android:layout_gravity="center" >
+        android:orientation="horizontal" >
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical" 
-            android:layout_marginRight="10dp">
+            android:layout_marginRight="10dp"
+            android:orientation="vertical" >
 
             <ImageView
                 android:id="@+id/image1"
@@ -53,20 +53,23 @@
                 android:src="@drawable/rating_bad"
                 android:text="Don&apos;t Like" />
 
+            <ImageButton
+                android:id="@+id/notseenbutton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:src="@drawable/notseen"
+                android:text="Haven&apos;t Seen It" />
 
+            <TextView
+                android:id="@+id/criticscore"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
 
-                <TextView
-                    android:id="@+id/criticscore"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-
-
-                <TextView
-                    android:id="@+id/audiencescore"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
+            <TextView
+                android:id="@+id/audiencescore"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
         </LinearLayout>
     </LinearLayout>
 
