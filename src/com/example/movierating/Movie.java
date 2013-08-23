@@ -4,21 +4,21 @@ import java.util.List;
 
 public class Movie {
 	String[] castArray;
-	String id, title, year, imageurl, thumburl, synopsis, rating;
+	String id, title, year, imageurl, thumburl, synopsis, rating, consensus;
 	int criticScore, audienceScore, runtime;
 	
 	Movie(String id, String title, String year, String imageurl, String thumburl, String synopsis, int criticScore, int audienceScore,
-			String rating, int runtime, String[] cast){
-		initMovie(id, title, year, imageurl, thumburl, synopsis, criticScore, audienceScore, rating, runtime, cast);
+			String rating, int runtime, String[] cast, String consensus){
+		initMovie(id, title, year, imageurl, thumburl, synopsis, criticScore, audienceScore, rating, runtime, cast, consensus);
 	}
 	
 	Movie(){
-		initMovie("","","","","","", -1, -1, "", -1, null);
+		initMovie("","","","","","", -1, -1, "", -1, null, "");
 	}
 	
 	void initMovie(String id, String title, String year, String imageurl, String thumburl, 
 			String synopsis, int criticScore, int audienceScore,
-			String rating, int runtime, String[] cast){
+			String rating, int runtime, String[] cast, String consensus){
 		this.id = id;
 		this.title = title;
 		this.year = year;
@@ -30,6 +30,7 @@ public class Movie {
 		this.rating = rating;
 		this.runtime = runtime;
 		this.castArray = cast;
+		this.consensus = consensus;
 	}
 	
 	@Override
@@ -53,10 +54,12 @@ public class Movie {
 	
 	public String getCastString() {
 		String c = "";
-		for(int i=0; i<castArray.length; i++){
-			c += castArray[i];
-			if(i!=castArray.length-1)
-				c+=",";
+		if(castArray!=null){
+			for(int i=0; i<castArray.length; i++){
+				c += castArray[i];
+				if(i!=castArray.length-1)
+					c+=",";
+			}
 		}
 		return c;
 	}
@@ -71,12 +74,20 @@ public class Movie {
 		return c;
 	}
 	
-	public String[] getCast() {
+	public String[] getCastArray() {
 		return castArray;
 	}
 
-	public void setCast(String[] cast) {
-		this.castArray = cast;
+	public void setCastArray(String[] castArray) {
+		this.castArray = castArray;
+	}
+
+	public String getConsensus() {
+		return consensus;
+	}
+
+	public void setConsensus(String consensus) {
+		this.consensus = consensus;
 	}
 
 	public String getRating() {

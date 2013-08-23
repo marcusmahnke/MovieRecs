@@ -24,6 +24,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 												"rating text not null," +
 												"runtime integer not null," +
 												"actors text not null," +
+												"consensus text not null," +
 												"similar integer not null," +
 												"seen integer not null," +
 												"liked integer not null);";

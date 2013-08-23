@@ -114,7 +114,8 @@ public class UnseenMoviesListFragment extends ListFragment implements OnClickLis
         myIntent.putExtra("aud_score", mCursor.getInt(8));
         myIntent.putExtra("rating", mCursor.getString(9));
         myIntent.putExtra("runtime", mCursor.getInt(10));
-        myIntent.putExtra("cast", mCursor.getString(11));   
+        myIntent.putExtra("cast", mCursor.getString(11)); 
+        myIntent.putExtra("consensus", mCursor.getString(12)); 
         myIntent.putExtra("seen", 0);
 		getActivity().startActivity(myIntent);
     }

@@ -118,8 +118,9 @@ public class SeenMoviesListFragment extends ListFragment implements OnClickListe
         myIntent.putExtra("aud_score", mCursor.getInt(8));     
         myIntent.putExtra("rating", mCursor.getString(9));
         myIntent.putExtra("runtime", mCursor.getInt(10));
-        myIntent.putExtra("cast", mCursor.getString(11));   
-        myIntent.putExtra("liked", mCursor.getInt(12));
+        myIntent.putExtra("cast", mCursor.getString(11));
+        myIntent.putExtra("consensus", mCursor.getString(12));
+        myIntent.putExtra("liked", mCursor.getInt(13));
         myIntent.putExtra("seen", 1);
 		getActivity().startActivity(myIntent);
     }

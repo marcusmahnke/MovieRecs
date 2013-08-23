@@ -32,7 +32,8 @@ public class MovieActivity extends Activity implements OnClickListener{
 				extras.getString("year"), extras.getString("imageurl"),
 				extras.getString("thumburl"), extras.getString("synopsis"),
 				extras.getInt("critic_score"), extras.getInt("aud_score"),
-				extras.getString("rating"), extras.getInt("runtime"), castArray);
+				extras.getString("rating"), extras.getInt("runtime"), castArray,
+				extras.getString("consensus"));
 		liked = extras.getInt("liked");
 		seen = extras.getInt("seen");
 		
@@ -43,6 +44,7 @@ public class MovieActivity extends Activity implements OnClickListener{
 		TextView runtimeView = (TextView) this.findViewById(R.id.movie_runtime);
 		TextView audienceScore = (TextView) this.findViewById(R.id.audiencescore);
 		TextView castView = (TextView) this.findViewById(R.id.cast);
+		TextView consensusView = (TextView) this.findViewById(R.id.consensus);
 		ImageView posterView = (ImageView) this.findViewById(R.id.image1);
 		ImageButton dontButton = (ImageButton) this.findViewById(R.id.dontbutton);
 		dontButton.setOnClickListener(this);
@@ -77,8 +79,8 @@ public class MovieActivity extends Activity implements OnClickListener{
 		criticScore.setCompoundDrawablePadding(5);
 		audienceScore.setCompoundDrawablePadding(5);
 		
-		criticScore.setText(movie.getCriticScore() + "%");
-		audienceScore.setText(movie.getAudienceScore() + "%");
+		criticScore.setText("Critics: " + movie.getCriticScore() + "%");
+		audienceScore.setText("Audience: " + movie.getAudienceScore() + "%");
 		posterView.setImageBitmap(loadImage(movie.getImageurl()));
 		titleView.setText(movie.getTitle() + " (" + movie.getYear() + ")");
 		ratingView.setText("Rated " + movie.getRating());
@@ -88,6 +90,12 @@ public class MovieActivity extends Activity implements OnClickListener{
 			synopsisView.setText("Unavailable");
 		else
 			synopsisView.setText(movie.getSynopsis());
+		
+		if(movie.getConsensus().trim().equals(""))
+			consensusView.setText("Unavailable");
+		else
+			consensusView.setText(movie.getConsensus());
+		
 	}
 	
 	Bitmap loadImage(String imageurl){

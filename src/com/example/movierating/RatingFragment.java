@@ -177,13 +177,17 @@ public class RatingFragment extends Fragment implements OnClickListener {
 			for (int i = 0; i < arr.length(); i++) {
 				JSONObject j = arr.getJSONObject(i);
 				Movie movie = getMovieFromJSON(j);
-				if(!similarMovieList.contains(movie) && !seenMovieList.contains(movie)){
+				if(!similarMovieList.contains(movie) && !seenMovieList.contains(movie) && movie != null){
 					similarMovieList.add(movie);
 					
 					db.createMovieRecord(movie.getId(), movie.getTitle(), movie.getYear(), null, 
 							movie.getImageurl(), movie.getThumburl(), movie.getSynopsis(), 
 							movie.getCriticScore(), movie.getAudienceScore(), 
-							movie.getRating(), movie.getRuntime(), movie.getCastString(), 1, 0, 0);
+							movie.getRating(), movie.getRuntime(), movie.getCastString(), 
+							movie.getConsensus(), 1, 0, 0);
+				}
+				else if(movie == null){
+					Log.i("ERROR", "MOVIE NULL!");
 				}
 				
 				
@@ -216,7 +220,7 @@ public class RatingFragment extends Fragment implements OnClickListener {
 		
 		return new Movie(c.getString(0), c.getString(1), c.getString(2), 
 				c.getString(4), c.getString(5), c.getString(6), c.getInt(7), c.getInt(8),
-				c.getString(9), c.getInt(10), castArray);
+				c.getString(9), c.getInt(10), castArray, c.getString(12));
 	}
 	
 	Movie getMovieFromJSON(JSONObject obj) {
@@ -238,8 +242,9 @@ public class RatingFragment extends Fragment implements OnClickListener {
 			
 			movie.initMovie(obj.getString("id"), obj.getString("title"), obj.getString("year"), imageurl, thumburl,
 					obj.getString("synopsis"), criticScore, audienceScore, obj.getString("mpaa_rating"),
-					obj.getInt("runtime"), castArray);
+					obj.getInt("runtime"), castArray, obj.getString("critics_consensus"));
 		} catch (JSONException e) {
+			return null;
 		}
 
 		return movie;
