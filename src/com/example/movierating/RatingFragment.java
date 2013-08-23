@@ -122,9 +122,15 @@ public class RatingFragment extends Fragment implements OnClickListener {
 			break;
 		case R.id.searchbutton:
 			String searchQuery = Uri.encode(searchTerm.getText().toString());
-			findMovie(searchQuery);
-			changeMovie();
-			searchTerm.setText("");
+			if(findMovie(searchQuery)){
+				changeMovie();
+				db.createMovieRecord(currentMovie.getId(), currentMovie.getTitle(), currentMovie.getYear(), null, 
+						currentMovie.getImageurl(), currentMovie.getThumburl(), currentMovie.getSynopsis(), 
+						currentMovie.getCriticScore(), currentMovie.getAudienceScore(), 
+						currentMovie.getRating(), currentMovie.getRuntime(), currentMovie.getCastString(), 
+						currentMovie.getConsensus(), 0, 0, 0);
+				searchTerm.setText("");
+			}
 			break;
 		}
 
@@ -137,7 +143,7 @@ public class RatingFragment extends Fragment implements OnClickListener {
 		posterView.setImageBitmap(image);
 	}
 	
-	void findMovie(String searchQuery) {
+	boolean findMovie(String searchQuery) {
 		String JSONString = "";
 
 		WebRequest request = new WebRequest(SEARCH_REQ + searchQuery + "&"
@@ -145,18 +151,23 @@ public class RatingFragment extends Fragment implements OnClickListener {
 		try {
 			JSONString = request.execute().get();
 		} catch (Exception e) {
+			return false;
 		}
 
 		JSONArray arr = new JSONArray();
 		try {
 			JSONObject obj = new JSONObject(JSONString);
+			Log.i("test", JSONString);
 			arr = obj.getJSONArray("movies");
 			obj = arr.getJSONObject(0);
 			currentMovie = getMovieFromJSON(obj);
+			if(currentMovie == null)
+				return false;
 		} catch (JSONException e) {
+			return false;
 		}
 			similarMovieList.add(currentMovie);
-
+			return true;
 	}
 
 	void findSimilarMovies() {
@@ -239,12 +250,15 @@ public class RatingFragment extends Fragment implements OnClickListener {
 				JSONObject actor = abridged_cast.getJSONObject(i);
 				castArray[i] = actor.getString("name");
 			}
-			
+
 			movie.initMovie(obj.getString("id"), obj.getString("title"), obj.getString("year"), imageurl, thumburl,
 					obj.getString("synopsis"), criticScore, audienceScore, obj.getString("mpaa_rating"),
-					obj.getInt("runtime"), castArray, obj.getString("critics_consensus"));
+					obj.getInt("runtime"), castArray, "");
+			movie.setConsensus(obj.getString("critics_consensus"));
+			Log.i("test", movie.toString());
 		} catch (JSONException e) {
-			return null;
+			Log.i("JSON ERROR", movie.toString());
+			//return null;
 		}
 
 		return movie;
