@@ -137,10 +137,12 @@ public class RatingFragment extends Fragment implements OnClickListener {
 	}
 	
 	void changeMovie() {
-		currentMovie = similarMovieList.get(0);
-		Bitmap image = loadImage(currentMovie.getImageurl());
-		titleText.setText(currentMovie.getTitle() + " (" + currentMovie.getYear() + ")");
-		posterView.setImageBitmap(image);
+		if(similarMovieList.size() != 0){
+			currentMovie = similarMovieList.get(0);
+			Bitmap image = loadImage(currentMovie.getImageurl());
+			titleText.setText(currentMovie.getTitle() + " (" + currentMovie.getYear() + ")");
+			posterView.setImageBitmap(image);
+		}
 	}
 	
 	boolean findMovie(String searchQuery) {

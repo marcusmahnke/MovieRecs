@@ -1,5 +1,7 @@
 package com.example.movierating;
 
+import java.io.ByteArrayOutputStream;
+
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
@@ -122,7 +124,12 @@ public class MovieActivity extends Activity implements OnClickListener{
 			break;
 		case R.id.notseenbutton:
 			if(seen==1){
-				db.updateMovieRecord(movie.getId(), 0, 0, 0);
+				Bitmap image = loadImage(movie.getThumburl());
+				ByteArrayOutputStream stream = new ByteArrayOutputStream();
+				image.compress(Bitmap.CompressFormat.PNG, 100, stream);
+				byte[] byteArray = stream.toByteArray();
+				
+				db.updateMovieRecord(movie.getId(), 0, 0, 0, byteArray);
 				finish();
 			}
 			break;
