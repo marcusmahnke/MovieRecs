@@ -254,11 +254,10 @@ public class RatingFragment extends Fragment implements OnClickListener {
 			movie.initMovie(obj.getString("id"), obj.getString("title"), obj.getString("year"), imageurl, thumburl,
 					obj.getString("synopsis"), criticScore, audienceScore, obj.getString("mpaa_rating"),
 					obj.getInt("runtime"), castArray, "");
+			//some movies don't have consensus field so it's add separately
 			movie.setConsensus(obj.getString("critics_consensus"));
-			Log.i("test", movie.toString());
 		} catch (JSONException e) {
-			Log.i("JSON ERROR", movie.toString());
-			//return null;
+			Log.e("JSON ERROR", movie.toString());
 		}
 
 		return movie;
