@@ -20,7 +20,10 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 												"image blob," +
 												"synopsis text not null, " +
 												"critic_score integer not null, " +
-												"aud_score integer not null," +
+												"aud_score integer not null, " +
+												"rating text not null," +
+												"runtime integer not null," +
+												"actors text not null," +
 												"similar integer not null," +
 												"seen integer not null," +
 												"liked integer not null);";

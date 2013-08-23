@@ -25,17 +25,24 @@ public class MovieActivity extends Activity implements OnClickListener{
 		db = new MyDB(this);
 		
 		Bundle extras = getIntent().getExtras();
+		String cast = extras.getString("cast");
+		String[] castArray = cast.split(",");
+		
 		movie = new Movie(extras.getString("id"), extras.getString("title"),
 				extras.getString("year"), extras.getString("imageurl"),
 				extras.getString("thumburl"), extras.getString("synopsis"),
-				extras.getInt("critic_score"), extras.getInt("aud_score"));
+				extras.getInt("critic_score"), extras.getInt("aud_score"),
+				extras.getString("rating"), extras.getInt("runtime"), castArray);
 		liked = extras.getInt("liked");
 		seen = extras.getInt("seen");
 		
 		TextView titleView = (TextView) this.findViewById(R.id.title);
 		TextView synopsisView = (TextView) this.findViewById(R.id.synopsis);
 		TextView criticScore = (TextView) this.findViewById(R.id.criticscore);
+		TextView ratingView = (TextView) this.findViewById(R.id.rating);
+		TextView runtimeView = (TextView) this.findViewById(R.id.movie_runtime);
 		TextView audienceScore = (TextView) this.findViewById(R.id.audiencescore);
+		TextView castView = (TextView) this.findViewById(R.id.cast);
 		ImageView posterView = (ImageView) this.findViewById(R.id.image1);
 		ImageButton dontButton = (ImageButton) this.findViewById(R.id.dontbutton);
 		dontButton.setOnClickListener(this);
@@ -74,7 +81,9 @@ public class MovieActivity extends Activity implements OnClickListener{
 		audienceScore.setText(movie.getAudienceScore() + "%");
 		posterView.setImageBitmap(loadImage(movie.getImageurl()));
 		titleView.setText(movie.getTitle() + " (" + movie.getYear() + ")");
-		Log.i("synopsis test", "test:" + movie.getSynopsis());
+		ratingView.setText("Rated " + movie.getRating());
+		runtimeView.setText("Runtime: " + movie.getRuntime() + " min");
+		castView.setText(movie.getCastStringFormatted());
 		if(movie.getSynopsis().trim().equals(""))
 			synopsisView.setText("Unavailable");
 		else

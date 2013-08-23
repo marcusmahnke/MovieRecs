@@ -1,19 +1,24 @@
 package com.example.movierating;
 
+import java.util.List;
+
 public class Movie {
-	String id, title, year, imageurl, thumburl, synopsis;
-	int criticScore, audienceScore;
+	String[] castArray;
+	String id, title, year, imageurl, thumburl, synopsis, rating;
+	int criticScore, audienceScore, runtime;
 	
-	Movie(String id, String title, String year, String imageurl, String thumburl, String synopsis, int criticScore, int audienceScore){
-		initMovie(id, title, year, imageurl, thumburl, synopsis, criticScore, audienceScore);
+	Movie(String id, String title, String year, String imageurl, String thumburl, String synopsis, int criticScore, int audienceScore,
+			String rating, int runtime, String[] cast){
+		initMovie(id, title, year, imageurl, thumburl, synopsis, criticScore, audienceScore, rating, runtime, cast);
 	}
 	
 	Movie(){
-		initMovie("","","","","","", -1, -1);
+		initMovie("","","","","","", -1, -1, "", -1, null);
 	}
 	
 	void initMovie(String id, String title, String year, String imageurl, String thumburl, 
-			String synopsis, int criticScore, int audienceScore){
+			String synopsis, int criticScore, int audienceScore,
+			String rating, int runtime, String[] cast){
 		this.id = id;
 		this.title = title;
 		this.year = year;
@@ -22,6 +27,9 @@ public class Movie {
 		this.synopsis = synopsis;
 		this.audienceScore = audienceScore;
 		this.criticScore = criticScore;
+		this.rating = rating;
+		this.runtime = runtime;
+		this.castArray = cast;
 	}
 	
 	@Override
@@ -42,6 +50,51 @@ public class Movie {
 	public String toString(){
 		return id + ": " + title + " (" + year + ")";
 	}
+	
+	public String getCastString() {
+		String c = "";
+		for(int i=0; i<castArray.length; i++){
+			c += castArray[i];
+			if(i!=castArray.length-1)
+				c+=",";
+		}
+		return c;
+	}
+	
+	public String getCastStringFormatted() {
+		String c = "";
+		for(int i=0; i<castArray.length; i++){
+			c += castArray[i];
+			if(i!=castArray.length-1)
+				c+=", ";
+		}
+		return c;
+	}
+	
+	public String[] getCast() {
+		return castArray;
+	}
+
+	public void setCast(String[] cast) {
+		this.castArray = cast;
+	}
+
+	public String getRating() {
+		return rating;
+	}
+
+	public void setRating(String rating) {
+		this.rating = rating;
+	}
+
+	public int getRuntime() {
+		return runtime;
+	}
+
+	public void setRuntime(int runtime) {
+		this.runtime = runtime;
+	}
+	
 	public String getSynopsis() {
 		return synopsis;
 	}
@@ -65,8 +118,6 @@ public class Movie {
 	public void setAudienceScore(int audienceScore) {
 		this.audienceScore = audienceScore;
 	}
-
-
 
 	public String getYear() {
 		return year;

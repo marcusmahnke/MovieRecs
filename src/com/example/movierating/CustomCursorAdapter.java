@@ -40,7 +40,7 @@ public class CustomCursorAdapter extends CursorAdapter{
 		posterView.setMaxHeight(91);
 		String title = c.getString(1);
 		String year = c.getString(2);
-		int liked = c.getInt(9);
+		int liked = c.getInt(12);
 		
 		if(isUnseen){
 			int criticScore = c.getInt(7);

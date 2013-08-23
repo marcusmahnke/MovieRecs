@@ -2,6 +2,7 @@ package com.example.movierating;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import org.json.JSONArray;
@@ -78,9 +79,7 @@ public class RatingFragment extends Fragment implements OnClickListener {
 		posterView = (ImageView) rootView.findViewById(R.id.image1);
 		posterView.getLayoutParams().width = 173;
 		posterView.getLayoutParams().height = 256;
-		//posterImage.setAdjustViewBounds(true);
-		//posterImage.setMaxWidth(173);
-		//posterImage.setMaxHeight(256);
+
 		if(similarMovieList.size() != 0)
 			changeMovie();
 
@@ -183,7 +182,8 @@ public class RatingFragment extends Fragment implements OnClickListener {
 					
 					db.createMovieRecord(movie.getId(), movie.getTitle(), movie.getYear(), null, 
 							movie.getImageurl(), movie.getThumburl(), movie.getSynopsis(), 
-							movie.getCriticScore(), movie.getAudienceScore(), 1, 0, 0);
+							movie.getCriticScore(), movie.getAudienceScore(), 
+							movie.getRating(), movie.getRuntime(), movie.getCastString(), 1, 0, 0);
 				}
 				
 				
@@ -195,8 +195,7 @@ public class RatingFragment extends Fragment implements OnClickListener {
 	void loadSimilarMovies(){
 		Cursor mCursor = db.selectMovieRecords(true, false, null);
 		for (int i = 0; i < mCursor.getCount(); i++) {
-			similarMovieList.add(new Movie(mCursor.getString(0), mCursor.getString(1), mCursor.getString(2), 
-					mCursor.getString(4), mCursor.getString(5), mCursor.getString(6), mCursor.getInt(7), mCursor.getInt(8)));
+			similarMovieList.add(getMovieFromCursor(mCursor));
 			mCursor.moveToNext();
 		}
 		mCursor.close();
@@ -205,11 +204,19 @@ public class RatingFragment extends Fragment implements OnClickListener {
 	void loadSeenMovies(){
 		Cursor mCursor = db.selectMovieRecords(false, true, null);
 		for (int i = 0; i < mCursor.getCount(); i++) {
-			seenMovieList.add(new Movie(mCursor.getString(0), mCursor.getString(1), mCursor.getString(2), 
-					mCursor.getString(4), mCursor.getString(5), mCursor.getString(6), mCursor.getInt(7), mCursor.getInt(8)));
+			seenMovieList.add(getMovieFromCursor(mCursor));
 			mCursor.moveToNext();
 		}
 		mCursor.close();
+	}
+	
+	Movie getMovieFromCursor(Cursor c){
+		String cast = c.getString(11);
+		String[] castArray = cast.split(",");
+		
+		return new Movie(c.getString(0), c.getString(1), c.getString(2), 
+				c.getString(4), c.getString(5), c.getString(6), c.getInt(7), c.getInt(8),
+				c.getString(9), c.getInt(10), castArray);
 	}
 	
 	Movie getMovieFromJSON(JSONObject obj) {
@@ -221,9 +228,17 @@ public class RatingFragment extends Fragment implements OnClickListener {
 			JSONObject ratings = obj.getJSONObject("ratings");
 			int criticScore = ratings.getInt("critics_score");
 			int audienceScore = ratings.getInt("audience_score");
+
+			JSONArray abridged_cast = obj.getJSONArray("abridged_cast");
+			String[] castArray = new String[abridged_cast.length()];
+			for(int i = 0; i < abridged_cast.length(); i++){
+				JSONObject actor = abridged_cast.getJSONObject(i);
+				castArray[i] = actor.getString("name");
+			}
 			
 			movie.initMovie(obj.getString("id"), obj.getString("title"), obj.getString("year"), imageurl, thumburl,
-					obj.getString("synopsis"), criticScore, audienceScore);
+					obj.getString("synopsis"), criticScore, audienceScore, obj.getString("mpaa_rating"),
+					obj.getInt("runtime"), castArray);
 		} catch (JSONException e) {
 		}
 

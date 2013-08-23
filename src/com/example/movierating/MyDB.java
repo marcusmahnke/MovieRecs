@@ -1,5 +1,7 @@
 package com.example.movierating;
 
+import java.util.List;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -18,7 +20,8 @@ public class MyDB {
 	}
 	
 	public long createMovieRecord(String id, String name, String year, byte[] image, String imageurl,
-			String thumburl, String synopsis, int criticScore, int audienceScore, int similar, int seen, int liked){  
+			String thumburl, String synopsis, int criticScore, int audienceScore, 
+			String rating, int runtime, String cast, int similar, int seen, int liked){  
 		ContentValues values = new ContentValues();  
 		values.put(MOVIE_ID, id);  
 		values.put(MOVIE_TITLE, name);  
@@ -29,6 +32,9 @@ public class MyDB {
 		values.put("synopsis", synopsis);
 		values.put("critic_score", criticScore);
 		values.put("aud_score", audienceScore);
+		values.put("rating", rating);
+		values.put("runtime", runtime);
+		values.put("actors", cast);
 		values.put("similar", similar);
 		values.put("seen", seen);
 		values.put("liked", liked);
@@ -45,7 +51,7 @@ public class MyDB {
 			selection = "seen = 0 and similar = 0";
 		
 		String[] cols = new String[] {MOVIE_ID, MOVIE_TITLE, "year", "image", "imageurl", "thumburl",
-				"synopsis", "critic_score", "aud_score", "liked"};
+				"synopsis", "critic_score", "aud_score", "rating", "runtime", "actors", "liked"};
 
 		Cursor mCursor = db.query(true, "Movies", cols, selection, null, null, null, orderBy, null);
 		if (mCursor != null){
